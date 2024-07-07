@@ -1,4 +1,4 @@
-import { useDataMutation } from './common';
+import { useDataMutation } from '../services/common';
 import { SignUpRequest, AuthResponse, HttpMethod } from '../types/data';
 
 interface SignUpConfig {
@@ -7,10 +7,7 @@ interface SignUpConfig {
 }
 
 export const useSignUp = (config: SignUpConfig = {}) => {
-  const {
-    method = 'POST',
-    Url = '/auth/signUp'
-  } = config;
+  const { method = 'POST', Url = '/auth/signUp' } = config;
 
   const mutation = useDataMutation<SignUpRequest, AuthResponse>();
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useSignUp } from '@/services/login';
+import { useSignUp } from '@/hooks/login';
 import { SignUpRequest } from '@/types/data';
 
 const MyPageComponent = () => {
