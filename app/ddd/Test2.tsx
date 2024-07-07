@@ -1,12 +1,23 @@
 'use client';
 
-import { useGetMyInfo } from '@/hooks/User';
+import { useGetMyInfoQuery, useUpdateMyInfo, useGetUserInfoQuery } from '@/hooks/User';
 import { useDataQuery } from '@/services/common';
 
 function MyInfo() {
-  const { data, isLoading, error } = useDataQuery({ queryKey: ['a', 'b'], url: '/users/269' });
+  const { data: myInfoData, isLoading, error } = useGetMyInfoQuery({ url: '/users/270' });
+  const updateMyData = useUpdateMyInfo();
+  const { data: userInfoData } = useGetUserInfoQuery({ userId: 268 });
+  const handleButtonClick = () => {
+    updateMyData({ nickname: 'james2' });
+  };
 
-  return <div>{isLoading}</div>;
+  return (
+    <>
+      <div>{myInfoData?.id}</div>
+      <div>{userInfoData?.id}</div>
+      <button onClick={handleButtonClick}>닉변</button>
+    </>
+  );
 }
 
 export default MyInfo;

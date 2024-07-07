@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useSignUp } from '@/hooks/login';
-import { SignUpRequest } from '@/types/data';
+import { useSignIn, useSignUp } from '@/hooks/login';
+import { SignInRequest, SignUpRequest } from '@/types/data';
 
 const MyPageComponent = () => {
   const signUp = useSignUp();
+  const signIn = useSignIn();
 
   const signUpData: SignUpRequest = {
     email: 'test1231232@naver.com',
@@ -14,13 +15,22 @@ const MyPageComponent = () => {
     passwordConfirmation: '1248128421',
   };
 
-  const handleButtonClick = () => {
+  const signInData: SignInRequest = {
+    email: 'test1@codeit.kr',
+    password: 'test1234',
+  };
+
+  const handleButtonClick1 = () => {
     signUp(signUpData);
+  };
+  const handleButtonClick2 = () => {
+    signIn(signInData);
   };
 
   return (
     <div>
-      <button onClick={handleButtonClick}>회원가입</button>
+      <button onClick={handleButtonClick1}>회원가입</button>
+      <button onClick={handleButtonClick2}>로그인</button>
     </div>
   );
 };
