@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { PiEyeSlashLight, PiEyeThin } from 'react-icons/pi';
 import { z } from 'zod';
-import SocialLogin from '../_components/social-login';
+import SocialLogin from '../_components/SocialLoginUi';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
