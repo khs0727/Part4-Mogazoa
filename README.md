@@ -27,6 +27,11 @@
 <img src="https://github.com/user-attachments/assets/7679926a-44e4-4944-9162-06931241c384" />
 
 <h3>트러블 슈팅</h3>
+- <a href="https://velog.io/@gudyj0727/react-query-server-side-rendering">Nextjs 서버사이드렌더링과 리액트 쿼리를 함께 사용하는 법</a> </br>
+- <a href="https://velog.io/@gudyj0727/react-query-invalidation">쿼리 무효화로 최신 상태 반영하기</a> 
+
+<h3>QA시트</h3>
+<img src="https://github.com/user-attachments/assets/015f7129-9c18-43be-932f-7aa5d07a7999" />
 
 <h3>팀 회고</h3>
 
