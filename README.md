@@ -11,7 +11,23 @@
 - 본인의 상품을 추가하고, 다른 상품에도 리뷰를 작성해보세요. </br>
 
 <h3>프로젝트 기간</h3>
-- <a href="https://part4-mogazoa.vercel.app/">프로젝트 배포 사이트</a> </br>
+- <a href="https://part4-mogazoa.vercel.app/">모가조아 배포 사이트</a> </br>
 - 개발 기간 : 2024.7.3~2024.8.8
 
+<h3>기술 스택</h3>
 
+<img src="https://github.com/user-attachments/assets/35a850b0-e4bd-42cb-82ed-963f248c980a" />
+
+<h3>역할 분담</h3>
+
+<img src="https://github.com/user-attachments/assets/c7d7ac6b-61af-4261-945b-03dc8f868b36" />
+
+<h3>일정 관리</h3>
+
+<img src="https://github.com/user-attachments/assets/7679926a-44e4-4944-9162-06931241c384" />
+
+<h3>트러블 슈팅</h3>
+
+<h3>팀 회고</h3>
+
+<img src="https://github.com/user-attachments/assets/9e0d70c2-e5a9-4e65-8ca4-6f6e8c1723ae" />
