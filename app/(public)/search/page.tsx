@@ -1,5 +1,5 @@
 import styled from '@/app/(public)/_styles/main.module.scss';
-import SortSelector from '@/app/_styled-guide/_components/sort-selector';
+import SortSelector from '@/components/sort-selector';
 import { PRODUCT_SORT_OPTIONS } from '@/constants/sortOrder';
 import { QueryParams } from '@/hooks/useInfinityScroll';
 import { ProductsListResponse, ProductSortOrder, ReviewSortOrder } from '@/types/data';

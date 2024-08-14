@@ -10,7 +10,7 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { IoSearch } from 'react-icons/io5';
 import GnbSearchBar from './gnb-search-bar';
-import Logo from './logo';
+import Logo from '../logo';
 
 function GnbMenus({ isLogin }: { isLogin: boolean }) {
   const { toggleButton } = useButtonStore();

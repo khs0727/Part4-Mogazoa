@@ -41,7 +41,7 @@ export default function FavoriteButton({
   useEffect(() => {
     setIsFavorited(initialIsFavorite);
     queryClient.invalidateQueries({ queryKey: ['productDetail', productId] });
-  }, [isFavorited, queryClient, productId, initialIsFavorite]);
+  }, [queryClient, productId, initialIsFavorite]);
 
   const toggleFavorite = () => {
     if (isFavorited) {

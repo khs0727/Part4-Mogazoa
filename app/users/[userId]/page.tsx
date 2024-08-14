@@ -9,10 +9,9 @@ import {
 } from '@/hooks/user';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import ProfileSection from '@/components/ProfileSection';
-import { UserInfo } from '@/components/ProfileSection';
+
 import { Skeleton } from '@/components/ui/skeleton';
-import NotFound from '@/app/not-found';
+import ProfileSection, { UserInfo } from '@/components/profile/profile-section';
 
 interface Product {
   id: number;

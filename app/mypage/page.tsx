@@ -7,12 +7,10 @@ import {
   useGetUserReviewedProducts,
 } from '@/hooks/user';
 import { useEffect, useState } from 'react';
-import ProfileSection from '@/components/ProfileSection';
-import { UserInfo } from '@/components/ProfileSection';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
-import NotFound from '../not-found';
+import ProfileSection, { UserInfo } from '../../components/profile/profile-section';
 
 interface Product {
   id: number;

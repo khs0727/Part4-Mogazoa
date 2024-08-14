@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
-import DropdownList from './dropdown-list';
+import DropdownList from '../dropdown-list';
 
 interface CategorySelectorProps {
   category: string[];

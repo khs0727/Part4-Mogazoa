@@ -1,6 +1,6 @@
-import CompareConfirmModal from '@/app/product/[productId]/_components/product-detail/compare-confirm-modal';
-import CompareProductReplacementModal from '@/app/product/[productId]/_components/product-detail/compare-product-replacement-modal';
-import EditProduct from '@/app/product/[productId]/_components/product-detail/edit-product-modal';
+import CompareConfirmModal from '@/app/product/[productId]/_components/modal/compare-confirm-modal';
+import CompareProductReplacementModal from '@/app/product/[productId]/_components/modal/compare-product-replacement-modal';
+
 import { Button } from '@/components/ui/button';
 import CategoryTag from '@/components/ui/tags/CategoryTag';
 import useCompareStore from '@/store/compareStore';
@@ -13,6 +13,7 @@ import CopyLinkButton from './copy-link-button';
 import FavoriteButton from './favorite-button';
 import KaKaoShareButton from './kakao-share-button';
 import CreateReview from '../modal/create-review';
+import EditProduct from '../modal/edit-product-modal';
 
 interface ProductCardProps {
   name: string;

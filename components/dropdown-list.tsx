@@ -1,7 +1,7 @@
 'use client';
 
 import { NO_KEYWORD, NO_RESULT } from '@/constants/messages';
-import { CategoryOption } from './CategorySelector';
+import { CategoryOption } from './category-selector';
 
 interface DropdownListProps<T> {
   options: T[];

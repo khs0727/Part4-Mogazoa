@@ -1,5 +1,5 @@
 'use client';
-import SortSelector from '@/app/_styled-guide/_components/sort-selector';
+import SortSelector from '@/components/sort-selector';
 import { REVIEW_SORT_OPTIONS } from '@/constants/sortOrder';
 import { useInfinityScroll } from '@/hooks/useInfinityScroll';
 import useSortOrderStore from '@/store/sortOrderStore';

@@ -7,7 +7,7 @@ import useCompareStore from '@/store/compareStore';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import useSearchSuggestions from '@/hooks/useSearchSuggestions';
 import useDropdown from '@/hooks/useDropdown';
-import DropdownList from '@/app/_styled-guide/_components/dropdown-list';
+import DropdownList from '@/components/dropdown-list';
 import { ProductOption, usePreviousCompareStore } from '@/store/globalStore';
 
 interface ComparePageInputProps {

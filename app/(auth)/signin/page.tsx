@@ -16,7 +16,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { PiEyeSlashLight, PiEyeThin } from 'react-icons/pi';
 import { z } from 'zod';
-import SocialLogin from '../_components/social-login';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
@@ -118,7 +117,6 @@ export default function SignInForm() {
           </Button>
         </form>
       </Form>
-      <SocialLogin />
     </div>
   );
 }

@@ -1,14 +1,14 @@
 'use client';
 
-import { ActivityCategory } from '@/app/_styled-guide/_components/activity-category';
-import { ActivityRating } from '@/app/_styled-guide/_components/activity-rating';
-import { ActivityReview } from '@/app/_styled-guide/_components/activity-review';
-import ProductSortSelector from '@/app/_styled-guide/_components/ProductSortSelector';
-import Profile from '@/app/_styled-guide/_components/profile';
+import { ActivityCategory } from '@/components/profile/activity-category';
+import { ActivityRating } from '@/components/profile/activity-rating';
+import { ActivityReview } from '@/components/profile/activity-review';
+import Profile from '@/components/profile/profile';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import ContentEmpty from './content-empty';
-import { Product } from './products/product';
+import ContentEmpty from '../content-empty';
+import { Product } from '../products/product';
+import ProductSortSelector from './product-sort-selector';
 
 interface Product {
   id: number;

@@ -1,5 +1,5 @@
 'use client';
-import { Follower } from '@/app/_styled-guide/_components/follower';
+
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { useInfinityScroll } from '@/hooks/useInfinityScroll';
 import Link from 'next/link';
+import { Follower } from './follower';
 
 interface FolloweesProps {
   userId: number;

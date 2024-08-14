@@ -1,16 +1,17 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useState } from 'react';
 
-import CategorySelector from '@/app/_styled-guide/_components/CategorySelector';
 import {
   Form,
   FormControl,
@@ -20,21 +21,20 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useUploadImage } from '@/hooks/image';
-import { useGetProducts, useUpdateProduct } from '@/hooks/product';
+import { useCreateProduct, useGetProducts } from '@/hooks/product';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { ProductsListResponse } from '@/types/data';
+import { useRouter } from 'next/navigation';
+import { BiImageAdd } from 'react-icons/bi';
 import { renameFileWithExtension } from '@/utils/textUtils';
 import useDebounce from '@/hooks/useDebounce';
-import { useDataQuery } from '@/services/common';
-import { ProductsListResponse } from '@/types/data';
+import CategorySelector from '../category-selector';
 
 const FormSchema = z.object({
   name: z
@@ -48,32 +48,38 @@ const FormSchema = z.object({
   categoryId: z.number(),
 });
 
-export interface ProductData {
-  productId: string[] | string;
-  name: string;
-  description: string;
-  image: string;
-  categoryId: number;
-  categoryName: string;
+interface AddProductModalProps {
+  triggerButton: React.ReactNode;
+}
+interface FieldError {
+  message: string;
+  value: string;
+}
+interface ServerErrorResponse {
+  message: string;
+  details?: Record<string, FieldError>;
 }
 
-export default function EditProduct({
-  productId,
-  name,
-  description,
-  image,
-  categoryId,
-  categoryName,
-}: ProductData) {
-  const [descLength, setDescLength] = useState(description.length);
-  const [imageUrl, setImageUrl] = useState<string>('');
-  const [isOpen, setIsOpen] = useState(false);
+function isServerError(error: unknown): error is { response: { data: ServerErrorResponse } } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    'data' in (error as { response: any }).response
+  );
+}
 
-  const queryClient = useQueryClient();
+export default function AddProductModal({ triggerButton }: AddProductModalProps) {
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [descLength, setDescLength] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const uploadImageMutation = useUploadImage();
+  const { mutateAsync: createProduct, isPending: isCreating } = useCreateProduct();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: { name, desc: description, image, categoryName, categoryId },
     mode: 'onBlur',
   });
 
@@ -86,22 +92,23 @@ export default function EditProduct({
     100,
   );
   // 상품명 중복 체크
-  const { data } = useGetProducts(
-    { keyword: watchedName },
+  const {
+    data,
+    isLoading: queryLoading,
+    isError: queryError,
+  } = useGetProducts(
+    { keyword: form.getValues('name') },
     {
       staleTime: 60 * 1000,
-      enabled: !!watchedName,
     },
   );
+
   function isProductNameDuplicate(name: string): boolean {
     return data ? data.list.some((product: { name: string }) => product.name === name) : false;
   }
 
   const handleNameBlur = async () => {
-    if (watchedName === name) {
-      form.clearErrors('name'); // 원래 이름일 경우 경고가 없음
-      return;
-    } else if (watchedName) {
+    if (watchedName) {
       const isDuplicate = isProductNameDuplicate(watchedName);
       if (isDuplicate) {
         form.setError('name', { type: 'manual', message: '이미 등록된 상품명입니다.' });
@@ -115,9 +122,6 @@ export default function EditProduct({
       return;
     }
   };
-
-  const uploadImageMutation = useUploadImage();
-  const { mutateAsync: updateProduct, isPending: isUpdating } = useUpdateProduct(Number(productId));
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -138,30 +142,43 @@ export default function EditProduct({
   const onSubmit = async (formData: z.infer<typeof FormSchema>) => {
     try {
       const { name, desc, image, categoryId } = formData;
+
       const updatedData = { name, description: desc, image, categoryId };
-      await updateProduct(updatedData);
-
-      // 쿼리 무효화
-      await queryClient.invalidateQueries({ queryKey: ['productDetail'] });
-
-      //모달 닫기
-      setIsOpen(false);
-
+      const response = await createProduct(updatedData);
       toast.success('상품이 성공적으로 업데이트되었습니다.');
+      router.push(`/product/${response.id}`); // 상품 상세 페이지로 이동
+
+      // 폼 리셋
+      form.reset();
+      setImageUrl('');
+      setDescLength(0);
+      setIsOpen(false);
     } catch (error) {
-      toast.error('상품 업데이트 중 오류가 발생했습니다.');
+      if (isServerError(error)) {
+        const errorData = error.response.data;
+
+        let errorMessage = '상품 추가 중 오류가 발생했습니다.';
+
+        if (errorData.details) {
+          const fieldErrors = Object.values(errorData.details);
+          if (fieldErrors.length > 0 && fieldErrors[0].message) {
+            errorMessage = fieldErrors[0].message;
+          }
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+
+        toast.error(errorMessage);
+      }
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">편집하기</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent className="max-w-[660px]">
-        <DialogDescription className="hidden">product form content</DialogDescription>
         <DialogHeader>
-          <DialogTitle className="flex flex-col gap-5 md:gap-[10px]">상품 편집</DialogTitle>
+          <DialogTitle className="flex flex-col gap-5 md:gap-[10px]">상품 추가</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -169,14 +186,14 @@ export default function EditProduct({
             className="w-full space-y-[10px] md:space-y-4 lg:space-y-5"
           >
             <div className="flex flex-col md:flex-row-reverse gap-[10px] md:gap-5">
-              {/* 이미지 추가 */}
+              {/* 상품 이미지 */}
               <FormField
                 control={form.control}
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="relative flex h-[140px] md:h-full w-[140px] md:w-[135px] lg:w-[160px]">
-                      <FormControl>
+                    <div className="relative flex h-[152px] w-[140px] md:w-[160px] lg:w-[160px]">
+                      <FormControl className="flex-grow-0">
                         <>
                           <Input
                             id="productPicture"
@@ -189,11 +206,15 @@ export default function EditProduct({
                             htmlFor="productPicture"
                             variant="file"
                             style={{
-                              backgroundImage: imageUrl
-                                ? `url(${imageUrl})`
-                                : `url(${field.value})`,
+                              backgroundImage: imageUrl ? `url(${imageUrl})` : field.value,
                             }}
-                          ></FormLabel>
+                          >
+                            {!imageUrl && (
+                              <div className="text-gray-600 text-[24px] md:text-[25px] lg:text-[34px]">
+                                <BiImageAdd />
+                              </div>
+                            )}
+                          </FormLabel>
                         </>
                       </FormControl>
                     </div>
@@ -202,6 +223,7 @@ export default function EditProduct({
                 )}
               />
               <div className="flex flex-1 flex-col gap-[10px] md:gap-4">
+                {/* 상품명 */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -209,8 +231,9 @@ export default function EditProduct({
                     <FormItem>
                       <FormControl>
                         <Input
-                          {...field}
                           placeholder="상품명 (상품 등록 여부를 확인해 주세요)"
+                          {...field}
+                          type="text"
                           onBlur={handleNameBlur}
                         />
                       </FormControl>
@@ -218,6 +241,7 @@ export default function EditProduct({
                     </FormItem>
                   )}
                 />
+                {/* 카테고리 */}
                 <FormField
                   control={form.control}
                   name="categoryName"
@@ -248,11 +272,12 @@ export default function EditProduct({
                 />
               </div>
             </div>
+            {/* 상품 설명 */}
             <FormField
               control={form.control}
               name="desc"
               render={({ field }) => (
-                <FormItem className="relative">
+                <FormItem>
                   <div className="relative">
                     <FormControl>
                       <Textarea
@@ -261,10 +286,8 @@ export default function EditProduct({
                         className="h-[120px] smd:h-[160px]"
                         maxLength={500}
                         onChange={(e) => {
-                          if (e.target.value.length <= 500) {
-                            field.onChange(e);
-                            setDescLength(e.target.value.length);
-                          }
+                          field.onChange(e);
+                          setDescLength(e.target.value.length);
                         }}
                       />
                     </FormControl>
@@ -279,14 +302,16 @@ export default function EditProduct({
           </form>
         </Form>
         <DialogFooter className="sm:justify-start">
-          <Button
-            type="button"
-            variant="default"
-            onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isValid || isUpdating}
-          >
-            {isUpdating ? '저장 중..' : '저장하기'}
-          </Button>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="default"
+              onClick={form.handleSubmit(onSubmit)}
+              disabled={isCreating}
+            >
+              {isCreating ? '저장 중..' : '추가하기'}
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

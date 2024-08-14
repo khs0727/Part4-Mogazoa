@@ -1,6 +1,6 @@
 import Followees from '@/components/modal/followees';
 import Followers from '@/components/modal/followers';
-import ProfileModal from '@/components/modal/profile';
+
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useFollowUser, useUnFollowUser } from '@/hooks/follow';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,7 @@ import DefaultImage from '@/public/assets/images/avatar-default-image.jpeg';
 import { useAuth } from '@/hooks/nextauth';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import ProfileModal from '../modal/profile-modal';
 
 interface UserProfileProps {
   id: number;
